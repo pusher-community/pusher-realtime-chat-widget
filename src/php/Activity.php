@@ -2,14 +2,15 @@
 class Activity {
   
   private $display_name = '<em>Anon</em>';
-  private $image = 'http://www.gravatar.com/avatar/00000000000000000000000000000000?d=monsterid&s=48';
+  private $image = null;
   private $action_text = null;
   private $date = null;
   private $id;
   private $type;
   
-  public function __construct($activity_type, $action_text,
-    $options = array('email' => null, 'displayName' => null)) {
+  public function __construct($activity_type, $action_text, $options = array()) {
+    
+    $options = $this->set_default_options($options);
       
     date_default_timezone_set('UTC');
     
@@ -19,9 +20,12 @@ class Activity {
     
     $this->action_text = $action_text;
     $this->display_name = $options['displayName'];
+    $this->image = $options['image'];
     
-    if( is_null( $options['email'] ) == false ) {
-      $this->image = $this->get_gravatar($options['email']);
+    if( $options['get_gravatar'] &&
+        $options['email'] ) {
+         
+      $this->image['url'] = $this->get_gravatar($options['email']);
       
       if( is_null($this->display_name) ) {
         $profile = $this->get_gravatar_profile($options['email']);
@@ -43,14 +47,28 @@ class Activity {
       'actor' => array(
         'displayName' => $this->display_name,
         'objectType' => 'person',
-        'image' => array(
-          'url' => $this->image,
-          'width' => 48,
-          'height' => 48
-        )
+        'image' => $this->image
       )
     );
     return $activity;
+  }
+  
+  private function set_default_options($options) {
+    $defaults = array ( 'email' => null,
+                        'displayName' => null,
+                        'image' => array(
+                            'url' => 'http://www.gravatar.com/avatar/00000000000000000000000000000000?d=wavatar&s=48',
+                            'width' => 48,
+                            'height' => 48
+                         )
+                      );
+    foreach ($defaults as $key => $value) {
+      if( isset($options[$key]) == false ) {
+        $options[$key] = $value;
+      }
+    }
+    
+    return $options;
   }
   
   // from: http://en.gravatar.com/site/implement/images/php/

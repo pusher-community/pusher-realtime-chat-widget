@@ -20,9 +20,9 @@ if( !isset($_SERVER['HTTP_REFERER']) ) {
 }
 
 $channel_name = get_channel_name($_SERVER['HTTP_REFERER']);
-$chat_info = sanitise_input($chat_info);
+$options = sanitise_input($chat_info);
 
-$activity = new Activity('chat-message', $chat_info['text'], $chat_info);
+$activity = new Activity('chat-message', $chat_info['text'], $options);
 
 $pusher = new Pusher(APP_KEY, APP_SECRET, APP_ID);
 $data = $activity->getMessage();
@@ -30,11 +30,13 @@ $response = $pusher->trigger($channel_name, 'chat_message', $data, null, true);
 
 header('Cache-Control: no-cache, must-revalidate');
 header('Content-type: application/json');
-echo(json_encode($data));
+
+$result = array('activity' => $data, 'pusherResponse' => $response);
+echo(json_encode($result));
 
 function get_channel_name($http_referer) {
   // not allowed :, / % #
-  $pattern = "/(\.|,|\/|\:)+/";
+  $pattern = "/(\W)+/";
   $channel_name = preg_replace($pattern, '-', $http_referer);
   return $channel_name;
 }
@@ -42,11 +44,12 @@ function get_channel_name($http_referer) {
 function sanitise_input($chat_info) {
   $email = isset($chat_info['email'])?$chat_info['email']:'';
   
-  $data = array();
-  $data['displayName'] = htmlspecialchars($chat_info['nickname']);
-  $data['text'] = htmlspecialchars($chat_info['text']);
-  $data['email'] = htmlspecialchars($email);
-  $data['time'] = date("D F j Y H:i:s");
-  return $data;
+  $options = array();
+  $options['displayName'] = htmlspecialchars($chat_info['nickname']);
+  $options['text'] = htmlspecialchars($chat_info['text']);
+  $options['email'] = htmlspecialchars($email);
+  $options['time'] = date("D F j Y H:i:s");
+  $options['get_gravatar'] = true;
+  return $options;
 }
 ?>

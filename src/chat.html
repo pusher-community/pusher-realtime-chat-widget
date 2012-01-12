@@ -8,7 +8,7 @@
     <script src="lib/less/less-1.1.5.min.js"></script>
     
     <link href="styles.css" rel="stylesheet" />
-    <link href="chat.css" rel="stylesheet" />
+    <link href="pusher-chat-widget.css" rel="stylesheet" />
     
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -17,18 +17,10 @@
     <script src="http://js.pusherapp.com/1.10/pusher.min.js"></script>
     <script src="js/PusherChatWidget.js"></script>    
     <script>
-      $(function() {
-        
-        var channelName = getValidChannelName(document.location.href);
+      $(function() {     
         var pusher = new Pusher('49e26cb8e9dde3dfc009')
-        var chatChannel = pusher.subscribe(channelName);
-        var chatWidget = new PusherChatWidget(chatChannel);
+        var chatWidget = new PusherChatWidget(pusher);
       });
-      
-      function getValidChannelName(url) {
-        var pattern = /(\.|,|\/|\:)+/g;
-        return url.replace(pattern, '-');
-      };
     </script>
   </head>
   <body>

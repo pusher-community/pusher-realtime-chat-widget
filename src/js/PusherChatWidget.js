@@ -1,14 +1,37 @@
-function PusherChatWidget(chatChannel, options) {
+/**
+ * Creates an instance of a PusherChatWidget, binds to a chat channel on the pusher instance and
+ * and creates the UI for the chat widget.
+ *
+ * @param {Pusher} pusher The Pusher object used for the chat widget.
+ * @param {Map} options A hash of key value options for the widget.
+ */
+function PusherChatWidget(pusher, options) {
   PusherChatWidget.instances.push(this);
   var self = this;
   
+  this._pusher = pusher;
+  
   options = options || {};
   this.settings = $.extend({
-    maxItems: 50,
-    chatEndPoint: 'php/chat.php'
+    maxItems: 50, // max items to show in the UI. Items beyond this limit will be removed as new ones come in.
+    chatEndPoint: 'php/chat.php', // the end point where chat messages should be sanitized and then triggered
+    channelName: document.location.href, // the name of the channel the chat will take place on
+    debug: true
   }, options);
   
-  this._chatChannel = chatChannel;
+  if(this.settings.debug && !Pusher.log) {
+    Pusher.log = function(msg) {
+      if(console && console.log) {
+        console.log(msg);
+      }
+    }
+  }
+  
+  // remove any unsupported characters from the chat channel name
+  // see: http://pusher.com/docs/client_api_guide/client_channels#naming-channels
+  this.settings.channelName = PusherChatWidget.getValidChannelName(this.settings.channelName);
+  
+  this._chatChannel = this._pusher.subscribe(this.settings.channelName);
   
   this._chatChannel.bind('chat_message', function(data) {
     self._chatMessageReceived(data);
@@ -28,6 +51,7 @@ function PusherChatWidget(chatChannel, options) {
 };
 PusherChatWidget.instances = [];
 
+/* @private */
 PusherChatWidget.prototype._chatMessageReceived = function(data) {
   
   if(this._itemCount === 0) {
@@ -48,6 +72,7 @@ PusherChatWidget.prototype._chatMessageReceived = function(data) {
   }
 };
 
+/* @private */
 PusherChatWidget.prototype._sendChatButtonClicked = function() {
   var nickname = $.trim(this._nicknameEl.val()); // optional
   var email = $.trim(this._emailEl.val()); // optional
@@ -68,6 +93,7 @@ PusherChatWidget.prototype._sendChatButtonClicked = function() {
   this._sendChatMessage(chatInfo);
 };
 
+/* @private */
 PusherChatWidget.prototype._sendChatMessage = function(data) {
   var self = this;
   
@@ -80,23 +106,25 @@ PusherChatWidget.prototype._sendChatMessage = function(data) {
     },
     complete: function(xhr, status) {
       Pusher.log('Chat message sent. Result: ' + status + ' : ' + xhr.responseText);
-      if(status === "success") {
+      if(xhr.status === 200) {
         self._messageInputEl.val('');
       }
       self._messageInputEl.removeAttr('readonly');
     },
-    success: function(activity) {
-        var imageInfo = activity.actor.image;
-        var image = $('<div class="pusher-chat-widget-current-user-image">' +
-                        '<img src="' + imageInfo.url + '" width="32" height="32" />' +
-                      '</div>');
-        var name = $('<div class="pusher-chat-widget-current-user-name">' + activity.actor.displayName + '</div>');
-        var header = self._widget.find('.pusher-chat-widget-header');
-        header.html(image).append(name);
+    success: function(result) {
+      var activity = result.activity;
+      var imageInfo = activity.actor.image;
+      var image = $('<div class="pusher-chat-widget-current-user-image">' +
+                      '<img src="' + imageInfo.url + '" width="32" height="32" />' +
+                    '</div>');
+      var name = $('<div class="pusher-chat-widget-current-user-name">' + activity.actor.displayName + '</div>');
+      var header = self._widget.find('.pusher-chat-widget-header');
+      header.html(image).append(name);
     }
   })
 };
 
+/* @private */
 PusherChatWidget._createHTML = function() {
   var html = '' +
   '<div class="pusher-chat-widget">' +
@@ -125,6 +153,7 @@ PusherChatWidget._createHTML = function() {
   return widget;
 };
 
+/* @private */
 PusherChatWidget._buildListItem = function(activity) {
   var li = $('<li class="activity"></li>');
   li.attr('data-activity-id', activity.id);
@@ -132,7 +161,9 @@ PusherChatWidget._buildListItem = function(activity) {
   li.append(item);
   
   var imageInfo = activity.actor.image;
-  var image = PusherChatWidget._buildImage(imageInfo);
+  var image = $('<div class="image">' +
+                  '<img src="' + imageInfo.url + '" width="' + imageInfo.width + '" height="' + imageInfo.height + '" />' +
+                '</div>');
   item.append(image);
   
   var content = $('<div class="content"></div>');
@@ -153,7 +184,7 @@ PusherChatWidget._buildListItem = function(activity) {
   
   var time = $('<div class="activity-row">' + 
                 '<a href="' + activity.link + '" class="timestamp">' +
-                  '<span title="' + activity.published + '">' + PusherChatWidget._timeToDescription(activity.published) + '</span>' +
+                  '<span title="' + activity.published + '">' + PusherChatWidget.timeToDescription(activity.published) + '</span>' +
                 '</a>' +
                 '<span class="activity-actions">' +
                   /*'<span class="tweet-action action-favorite">' +
@@ -167,14 +198,22 @@ PusherChatWidget._buildListItem = function(activity) {
   return li;
 };
 
-PusherChatWidget._buildImage = function(imageInfo) {
-  var image = $('<div class="image">' +
-                  '<img src="' + imageInfo.url + '" width="' + imageInfo.width + '" height="' + imageInfo.height + '" />' +
-                '</div>');
-  return image;
+/**
+ * converts a string into something which can be used as a valid channel name in Pusher.
+ * @param {String} from The string to be converted.
+ *
+ * @see http://pusher.com/docs/client_api_guide/client_channels#naming-channels
+ */
+PusherChatWidget.getValidChannelName = function(from) {
+  var pattern = /(\W)+/g;
+  return from.replace(pattern, '-');
 }
 
-PusherChatWidget._timeToDescription = function(time) {
+/**
+ * converts a string or date parameter into a 'social media style'
+ * time description.
+ */
+PusherChatWidget.timeToDescription = function(time) {
   if(time instanceof Date === false) {
     time = Date.parse(time);
   }
@@ -201,11 +240,3 @@ PusherChatWidget._timeToDescription = function(time) {
   }
   return desc;
 };
-
-if(!Pusher.log) {
-  Pusher.log = function(msg) {
-    if(console && console.log) {
-      console.log(msg);
-    }
-  }
-}
