@@ -1,0 +1,29 @@
+body {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.container {
+  width: 640px;
+}
+
+.hero-unit h1 {
+  font-size: 45px;
+}
+
+.hero-unit {
+  padding-bottom: 20px;
+}
+
+.hero-unit p:last-child {
+  margin: 0;
+  line-height: 11px;
+}
+
+#gravatar {
+  display: none;
+}
+
+.hide {
+  display: none;
+}
