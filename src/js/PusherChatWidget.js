@@ -16,6 +16,7 @@ function PusherChatWidget(pusher, options) {
     maxItems: 50, // max items to show in the UI. Items beyond this limit will be removed as new ones come in.
     chatEndPoint: 'php/chat.php', // the end point where chat messages should be sanitized and then triggered
     channelName: document.location.href, // the name of the channel the chat will take place on
+    appendTo: document.body, // A jQuery selector or object. Defines where the element should be appended to
     debug: true
   }, options);
   
@@ -39,7 +40,7 @@ function PusherChatWidget(pusher, options) {
     
   this._itemCount = 0;
   
-  this._widget = PusherChatWidget._createHTML();
+  this._widget = PusherChatWidget._createHTML(this.settings.appendTo);
   this._nicknameEl = this._widget.find('input[name=nickname]');
   this._emailEl = this._widget.find('input[name=email]');  
   this._messageInputEl = this._widget.find('textarea');
@@ -125,7 +126,7 @@ PusherChatWidget.prototype._sendChatMessage = function(data) {
 };
 
 /* @private */
-PusherChatWidget._createHTML = function() {
+PusherChatWidget._createHTML = function(appendTo) {
   var html = '' +
   '<div class="pusher-chat-widget">' +
     '<div class="pusher-chat-widget-header">' +
@@ -149,7 +150,7 @@ PusherChatWidget._createHTML = function() {
     '</div>' +
   '</div>';
   var widget = $(html);
-  $(document.body).append(widget);
+  $(appendTo).append(widget);
   return widget;
 };
 

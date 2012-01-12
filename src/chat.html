@@ -19,7 +19,9 @@
     <script>
       $(function() {     
         var pusher = new Pusher('49e26cb8e9dde3dfc009')
-        var chatWidget = new PusherChatWidget(pusher);
+        var chatWidget = new PusherChatWidget(pusher, {
+          appendTo: '#pusher_chat_widget'
+        });
       });
     </script>
   </head>
@@ -42,6 +44,26 @@
         <p><a href="https://github.com/pusher/pusher-realtime-chat-widget" class="btn primary large" target="_blank">Get the code &raquo;</a></p>
         <p><small>We plan to update this sample to contain backend code in other technologies. Feel free to <a href="https://github.com/pusher/pusher-realtime-chat-widget">fork</a> and try it for yourself.</small></p>
       </div>
+      
+      <section class="realtime-chat">
+        
+        <div class="page-header">
+          <h1>Realtime Chat Widget Example</h1>
+        </div>
+        
+        <div class="row">
+          
+          <div class="span5">
+            <p>
+              <p><strong>Why don't you provide your email address</strong> so your Gravatar can be looked up and used in the Chat Widget</p>
+            </p>
+          </div>
+          <div class="span5" id='pusher_chat_widget'>
+          </div>
+          
+        </div>
+        
+      </section>
 
       <footer>
         <p></p>

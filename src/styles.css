@@ -27,3 +27,13 @@ body {
 .hide {
   display: none;
 }
+
+#pusher_chat_widget .pusher-chat-widget {
+  /* override for purposes of demo */
+  position: relative !important;
+  bottom: auto !important;
+  right: auto !important;
+
+  margin-left: 30px;
+}
+
