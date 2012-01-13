@@ -22,7 +22,7 @@ if( !isset($_SERVER['HTTP_REFERER']) ) {
 $channel_name = get_channel_name($_SERVER['HTTP_REFERER']);
 $options = sanitise_input($chat_info);
 
-$activity = new Activity('chat-message', $chat_info['text'], $options);
+$activity = new Activity('chat-message', $options['text'], $options);
 
 $pusher = new Pusher(APP_KEY, APP_SECRET, APP_ID);
 $data = $activity->getMessage();
@@ -45,9 +45,9 @@ function sanitise_input($chat_info) {
   $email = isset($chat_info['email'])?$chat_info['email']:'';
   
   $options = array();
-  $options['displayName'] = htmlspecialchars($chat_info['nickname']);
-  $options['text'] = htmlspecialchars($chat_info['text']);
-  $options['email'] = htmlspecialchars($email);
+  $options['displayName'] = substr(htmlspecialchars($chat_info['nickname']), 0, 30);
+  $options['text'] = substr(htmlspecialchars($chat_info['text']), 0, 300);
+  $options['email'] = substr(htmlspecialchars($email), 0, 100);
   $options['time'] = date("D F j Y H:i:s");
   $options['get_gravatar'] = true;
   return $options;

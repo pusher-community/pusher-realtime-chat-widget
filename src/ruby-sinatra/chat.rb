@@ -31,7 +31,7 @@ post '/chat' do
   channel_name = get_channel_name(request.referer)
   options = sanitise_input(chat_info)
 
-  activity = Activity.new('chat-message', chat_info['text'], options)
+  activity = Activity.new('chat-message', options['text'], options)
 
   data = activity.getMessage()
   response = Pusher[channel_name].trigger('chat_message', data)
@@ -56,9 +56,9 @@ def sanitise_input(chat_info)
   email = chat_info['email']?chat_info['email']:''
 
   options = {}
-  options['displayName'] = escape_html(chat_info['nickname'])
-  options['text'] = escape_html(chat_info['text'])
-  options['email'] = escape_html(email)
+  options['displayName'] = escape_html(chat_info['nickname']).slice(0, 30)
+  options['text'] = escape_html(chat_info['text']).slice(0, 300)
+  options['email'] = escape_html(email).slice(0, 100)
   options['get_gravatar'] = true
   return options
 end
