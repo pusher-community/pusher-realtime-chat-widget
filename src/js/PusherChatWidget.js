@@ -211,12 +211,12 @@ PusherChatWidget._buildListItem = function(activity) {
   content.append(user);
   
   var message = $('<div class="activity-row">' +
-                    '<div class="text">' + activity.body.replace(/\//g, '') + '</div>' +
+                    '<div class="text">' + activity.body.replace(/\\('|&quot;)/g, '$1') + '</div>' +
                   '</div>');
   content.append(message);
   
   var time = $('<div class="activity-row">' + 
-                '<a href="' + activity.link + '" class="timestamp">' +
+                '<a ' + (activity.link?'href="' + activity.link + '" ':'') + ' class="timestamp">' +
                   '<span title="' + activity.published + '" data-activity-published="' + activity.published + '">' + PusherChatWidget.timeToDescription(activity.published) + '</span>' +
                 '</a>' +
                 '<span class="activity-actions">' +
@@ -263,10 +263,10 @@ PusherChatWidget.timeToDescription = function(time) {
     desc = seconds + " second" + (seconds !== 1?"s":"") + " ago";
   }
   else if(minutes < 60) {
-    desc = minutes + " minutes ago";
+    desc = "about " + minutes + " minute" + (minutes !== 1?"s":"") + " ago";
   }
   else if(hours < 24) {
-    desc = hours + "hours ago";
+    desc = "about " + hours + " hour"  + (hours !== 1?"s":"") + " ago";
   }
   else {
     desc = time.getDay() + " " + ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"][time.getMonth()]
