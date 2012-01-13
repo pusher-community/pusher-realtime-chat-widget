@@ -48,7 +48,6 @@ function sanitise_input($chat_info) {
   $options['displayName'] = substr(htmlspecialchars($chat_info['nickname']), 0, 30);
   $options['text'] = substr(htmlspecialchars($chat_info['text']), 0, 300);
   $options['email'] = substr(htmlspecialchars($email), 0, 100);
-  $options['time'] = date("D F j Y H:i:s");
   $options['get_gravatar'] = true;
   return $options;
 }

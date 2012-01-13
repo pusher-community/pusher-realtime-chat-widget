@@ -10,6 +10,7 @@ function PusherChatWidget(pusher, options) {
   var self = this;
   
   this._pusher = pusher;
+  this._autoScroll = true;
   
   options = options || {};
   this.settings = $.extend({
@@ -49,11 +50,21 @@ function PusherChatWidget(pusher, options) {
   this._widget.find('button').click(function() {
     self._sendChatButtonClicked();
   })
+  
+  var messageEl = this._messagesEl;
+  messageEl.scroll(function() {
+    var el = messageEl.get(0);
+    var scrollableHeight = (el.scrollHeight - messageEl.height());
+    self._autoScroll = ( scrollableHeight === messageEl.scrollTop() );
+  });
+  
+  this._startTimeMonitor();
 };
 PusherChatWidget.instances = [];
 
 /* @private */
 PusherChatWidget.prototype._chatMessageReceived = function(data) {
+  var self = this;
   
   if(this._itemCount === 0) {
     this._messagesEl.html('');
@@ -62,7 +73,13 @@ PusherChatWidget.prototype._chatMessageReceived = function(data) {
   var messageEl = PusherChatWidget._buildListItem(data);
   messageEl.hide();
   this._messagesEl.append(messageEl);
-  messageEl.slideDown();
+  messageEl.slideDown(function() {
+    if(self._autoScroll) {
+      var messageEl = self._messagesEl.get(0);
+      var scrollableHeight = (messageEl.scrollHeight - self._messagesEl.height());
+      self._messagesEl.scrollTop(messageEl.scrollHeight);
+    }
+  });
   
   ++this._itemCount;
   
@@ -79,6 +96,7 @@ PusherChatWidget.prototype._sendChatButtonClicked = function() {
   var email = $.trim(this._emailEl.val()); // optional
   if(!nickname) {
     alert('please supply a nickname');
+    return;
   }
   var message = $.trim(this._messageInputEl.val());
   if(!message) {
@@ -123,6 +141,20 @@ PusherChatWidget.prototype._sendChatMessage = function(data) {
       header.html(image).append(name);
     }
   })
+};
+
+/* @private */
+PusherChatWidget.prototype._startTimeMonitor = function() {
+  var self = this;
+  
+  setInterval(function() {
+    self._messagesEl.children('.activity').each(function(i, el) {
+      var timeEl = $(el).find('a.timestamp span[data-activity-published]');
+      var time = timeEl.attr('data-activity-published');
+      var newDesc = PusherChatWidget.timeToDescription(time);
+      timeEl.text(newDesc);
+    });
+  }, 10 * 1000)
 };
 
 /* @private */
@@ -185,7 +217,7 @@ PusherChatWidget._buildListItem = function(activity) {
   
   var time = $('<div class="activity-row">' + 
                 '<a href="' + activity.link + '" class="timestamp">' +
-                  '<span title="' + activity.published + '">' + PusherChatWidget.timeToDescription(activity.published) + '</span>' +
+                  '<span title="' + activity.published + '" data-activity-published="' + activity.published + '">' + PusherChatWidget.timeToDescription(activity.published) + '</span>' +
                 '</a>' +
                 '<span class="activity-actions">' +
                   /*'<span class="tweet-action action-favorite">' +
@@ -222,8 +254,8 @@ PusherChatWidget.timeToDescription = function(time) {
   var now = new Date();
   var howLongAgo = (now - time);
   var seconds = Math.round(howLongAgo/1000);
-  var minutes = seconds/60;
-  var hours = minutes/60;
+  var minutes = Math.round(seconds/60);
+  var hours = Math.round(minutes/60);
   if(seconds === 0) {
     desc = "just now";
   }

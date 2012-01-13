@@ -9,7 +9,7 @@ class Activity
       
     @type = activity_type
     @id = UUID.new.generate
-    @date = Time.now.strftime('%Y-%m-%d %H:%M:%S')
+    @date = Time.now.to_s()
     
     @action_text = action_text;
     @display_name = options["displayName"]
