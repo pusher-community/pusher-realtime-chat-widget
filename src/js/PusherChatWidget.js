@@ -248,7 +248,7 @@ PusherChatWidget.getValidChannelName = function(from) {
  */
 PusherChatWidget.timeToDescription = function(time) {
   if(time instanceof Date === false) {
-    time = Date.parse(time);
+    time = new Date(Date.parse(time));
   }
   var desc = "dunno";
   var now = new Date();
