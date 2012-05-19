@@ -4,6 +4,8 @@
   right: 30px;
   z-index: 10000;
   
+  font-size: 13px;
+  
   width: 300px;
   
   background-color: whiteSmoke;
@@ -22,6 +24,8 @@
 .pusher-chat-widget label {
   font-weight: bold;
   text-align: left;
+  padding-top: 6px;
+  line-height: 18px;
 }
 
 .pusher-chat-widget-header {
@@ -30,11 +34,6 @@
   padding-bottom: 5px;
   margin-top: 5px;
   overflow: auto;
-}
-
-.pusher-chat-widget .pusher-chat-widget-header label {
-  padding-top: 6px;
-  font-size: 13px;
 }
 
 .pusher-chat-widget-current-user-image {
