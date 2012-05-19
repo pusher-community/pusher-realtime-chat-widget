@@ -32,6 +32,11 @@
   overflow: auto;
 }
 
+.pusher-chat-widget .pusher-chat-widget-header label {
+  padding-top: 6px;
+  font-size: 13px;
+}
+
 .pusher-chat-widget-current-user-image {
   float: left;
   height: 32px;
@@ -70,6 +75,7 @@
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
   border-radius: 6px;
+  vertical-align: top;
   
   color: white;
   background-color: #0064CD;
@@ -90,6 +96,7 @@
 .pusher-chat-widget ul.activity-stream {
   list-style: none;
   margin: 0;
+  padding: 0;
   
   background-color: white;
   min-height: 100px;
