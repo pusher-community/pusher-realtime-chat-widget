@@ -1,9 +1,9 @@
-require 'config.rb'
-require 'activity.rb'
-
 require 'sinatra'
 require 'pusher'
 require 'json'
+
+require_relative 'activity'
+require_relative 'config'
 
 include Rack::Utils
 
@@ -52,7 +52,7 @@ def get_channel_name(http_referer)
   return channel_name
 end
 
-def sanitise_input(chat_info) 
+def sanitise_input(chat_info)
   email = chat_info['email']?chat_info['email']:''
 
   options = {}
