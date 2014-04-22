@@ -84,7 +84,8 @@ PusherChatWidget.prototype._chatMessageReceived = function(data) {
   ++this._itemCount;
   
   if(this._itemCount > this.settings.maxItems) {
-    this._messagesEl.children(':last').slideUp(function() {
+    /* get first li of list */
+    this._messagesEl.children(':first').slideUp(function() {
       $(this).remove();
     });
   }
