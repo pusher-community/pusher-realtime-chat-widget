@@ -1,4 +1,5 @@
 *.DS_Store
 src/php/config.php
 src/ruby-sinatra/config.rb
-
+src/nodejs/config.js
+src/nodejs/node_modules
