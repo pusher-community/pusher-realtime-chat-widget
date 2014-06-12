@@ -8,7 +8,7 @@ Here is a [live version of the chat widget in action](http://pusher-realtime-cha
 
 ## Tutorial
 
-We"ve put together a [tutorial on how to get up and running with the widget](http://pusher.com/tutorials/realtime_chat_widget).
+We've put together a [tutorial on how to get up and running with the widget](http://pusher.com/tutorials/realtime_chat_widget).
 
 ## src
 
