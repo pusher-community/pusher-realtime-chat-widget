@@ -4,7 +4,7 @@ This sample shows how to create a Realtime Chat Widget with a PHP, Ruby or Node.
 
 ## Demo
 
-Here is a [live version of the chat widget in action](http://pusher-realtime-chat-widget.phpfogapp.com/src/).
+Here is a [live version of the chat widget in action](http://pusher.com/tutorials/realtime_chat_widget).
 
 ## Tutorial
 
