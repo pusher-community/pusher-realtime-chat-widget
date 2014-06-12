@@ -34,7 +34,7 @@ And navigating to http://localhost:4567 to see the side-by-side example or http:
 
 ### /php
 
-The server code required to use the widget with a PHP back-end. The `src/chat.html` file is set up to us the PHP back-end.
+The server code required to use the widget with a PHP back-end. The `src/chat.html` file is set up to use the PHP back-end.
 
 ### /ruby-sinatra
 
