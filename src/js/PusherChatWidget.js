@@ -137,7 +137,7 @@ PusherChatWidget.prototype._sendChatMessage = function(data) {
       var image = $('<div class="pusher-chat-widget-current-user-image">' +
                       '<img src="' + imageInfo.url + '" width="32" height="32" />' +
                     '</div>');
-      var name = $('<div class="pusher-chat-widget-current-user-name">' + activity.actor.displayName + '</div>');
+      var name = $('<div class="pusher-chat-widget-current-user-name">' + activity.actor.displayName.replace(/\\'/g, "'") + '</div>');
       var header = self._widget.find('.pusher-chat-widget-header');
       header.html(image).append(name);
     }
@@ -205,7 +205,7 @@ PusherChatWidget._buildListItem = function(activity) {
   
   var user = $('<div class="activity-row">' +
                 '<span class="user-name">' +
-                  '<a class="screen-name" title="' + activity.actor.displayName + '">' + activity.actor.displayName + '</a>' +
+                  '<a class="screen-name" title="' + activity.actor.displayName.replace(/\\'/g, "'") + '">' + activity.actor.displayName.replace(/\\'/g, "'") + '</a>' +
                   //'<span class="full-name">' + activity.actor.displayName + '</span>' +
                 '</span>' +
               '</div>');
