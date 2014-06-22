@@ -117,7 +117,7 @@ PusherChatWidget.prototype._sendChatButtonClicked = function() {
 PusherChatWidget.prototype._sendChatMessage = function(data) {
   var self = this;
   
-  this._messageInputEl.attr('readonly');
+  this._messageInputEl.attr('readonly', 'readonly');
   $.ajax({
     url: this.settings.chatEndPoint,
     type: 'post',
