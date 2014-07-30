@@ -42,7 +42,7 @@ The server code required to run the example using [Sinatra](http://www.sinatrarb
 
 The `src/chat.html` file will need to be updated so that the `PusherChatWidget` talks to the sinatra app. This means providing a `chatEndPoint` setting to point to `/chat` as follows:
 
-    var pusher = new Pusher("49e26cb8e9dde3dfc009")
+    var pusher = new Pusher("CHANGE_KEY")
     var chatWidget = new PusherChatWidget(pusher, {
       appendTo: "#pusher_chat_widget",
       chatEndPoint: "/chat"
