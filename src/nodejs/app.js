@@ -62,19 +62,20 @@ app.post("/chat", function(req, res){
   var channelName = getChannelName(req.header("Referer"));
   var options = sanitiseInput(chatInfo);
 
-  var activity = new Activity("chat-message", options["text"], options);
-  var data = activity.getMessage();
+  var activity = new Activity("chat-message", options["text"], options, function(result) {
+    var data = result.getMessage();
 
-  // Trigger message
-  var response = pusher.trigger(channelName, "chat_message", data);
-  
-  var status = 200;
-  var body = {"activity": data, "pusherResponse": response};
-  
-  res.setHeader("Cache-Control", "no-cache, must-revalidate");
-  res.setHeader("Content-Type", "application/json");
+    // Trigger message
+    var response = pusher.trigger(channelName, "chat_message", data);
+    
+    var status = 200;
+    var body = {"activity": data, "pusherResponse": response};
+    
+    res.setHeader("Cache-Control", "no-cache, must-revalidate");
+    res.setHeader("Content-Type", "application/json");
 
-  res.send(status, body);
+    res.send(status, body);
+  });
 });
 
 // Open server on specified port
