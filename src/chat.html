@@ -20,8 +20,7 @@
       $(function() {     
         var pusher = new Pusher("PUSHER_APP_KEY")
         var chatWidget = new PusherChatWidget(pusher, {
-          appendTo: "#pusher_chat_widget",
-          chatEndPoint: "/chat"
+          appendTo: "#pusher_chat_widget"
         });
       });
     </script>
