@@ -1,5 +1,5 @@
 <?php
-require_once('lib/squeeks-Pusher-PHP/lib/Pusher.php');
+require_once('./vendor/autoload.php');
 require_once('Activity.php');
 require_once('config.php');
 
