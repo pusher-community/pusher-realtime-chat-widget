@@ -34,7 +34,23 @@ And navigating to http://localhost:4567 to see the side-by-side example or http:
 
 ### /php
 
-The server code required to use the widget with a PHP back-end. The `src/chat.html` file is set up to use the PHP back-end.
+The server code required to use the widget with a PHP back-end. Update the `src/chat.html` file to your `PUSHER_APP_KEY`:
+
+
+```
+var pusher = new Pusher("CHANGE_KEY")
+```
+
+Then, set up the PHP back-end:
+
+```
+cd src/php
+composer install
+cd ..
+PHP -s localhost:8080
+```
+
+And navigating to http://localhost:8080/ to see the side-by-side example or http://localhost:8080/chat.html to see the standalone example. 
 
 ### /ruby-sinatra
 
