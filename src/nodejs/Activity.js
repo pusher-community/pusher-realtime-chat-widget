@@ -31,7 +31,7 @@ var Activity = function(activityType, actionText, options, callback) {
     self.image.url = gravatar.url(self.options["email"], {s: 80, d: "mm", r: "g"});
     
     var profile = gravatar.get_profile(gravatar.profile_url(self.options.email), function(error, profile) {
-      if (profile.entry[0].displayName) {
+      if (profile.entry && profile.entry[0].displayName) {
         self.displayName = profile.entry[0].displayName;
       }
 
