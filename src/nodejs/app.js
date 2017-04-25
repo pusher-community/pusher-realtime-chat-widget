@@ -1,4 +1,4 @@
-var config = require("./config");
+var config = require("./config_example");
 var Activity = require("./Activity");
 
 var express = require("express");
@@ -67,10 +67,10 @@ app.post("/chat", function(req, res){
 
     // Trigger message
     var response = pusher.trigger(channelName, "chat_message", data);
-    
+
     var status = 200;
     var body = {"activity": data, "pusherResponse": response};
-    
+
     res.setHeader("Cache-Control", "no-cache, must-revalidate");
     res.setHeader("Content-Type", "application/json");
 
@@ -95,6 +95,6 @@ var sanitiseInput = function(chatInfo) {
   options["text"] = escapeHTML(chatInfo["text"]).slice(0, 300);
   options["email"] = escapeHTML(email).slice(0, 100);
   options["get_gravatar"] = true;
-  
+
   return options;
 };
