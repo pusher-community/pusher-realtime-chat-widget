@@ -47,7 +47,7 @@ Then, set up the PHP back-end:
 cd src/php
 composer install
 cd ..
-PHP -s localhost:8080
+PHP -S localhost:8080
 ```
 
 And navigating to http://localhost:8080/ to see the side-by-side example or http://localhost:8080/chat.html to see the standalone example. 
