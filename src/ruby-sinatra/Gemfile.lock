@@ -1,7 +1,7 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    json (1.5.3)
+    json (1.5.5)
     macaddr (1.5.0)
       systemu (>= 2.4.0)
     multi_json (1.0.4)
@@ -9,8 +9,8 @@ GEM
       multi_json (~> 1.0)
       ruby-hmac (~> 0.4.0)
       signature (~> 0.1.2)
-    rack (1.4.0)
-    rack-protection (1.2.0)
+    rack (1.5.4)
+    rack-protection (1.5.5)
       rack
     ruby-hmac (0.4.0)
     signature (0.1.2)
